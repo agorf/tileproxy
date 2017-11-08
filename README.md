@@ -1,4 +1,4 @@
-# Slippy map tile proxy
+# tileproxy
 
 A minimal [slippy map tile][slippy] [Rack][]-based HTTP proxy and demultiplexer.
 
@@ -39,13 +39,13 @@ bundler`
 Clone the repository:
 
 ~~~ sh
-$ git clone https://github.com/agorf/slippy-map-tile-proxy.git
+$ git clone https://github.com/agorf/tileproxy.git
 ~~~
 
 Enter the directory:
 
 ~~~ sh
-$ cd slippy-map-tile-proxy
+$ cd tileproxy
 ~~~
 
 Install the gems:
@@ -123,7 +123,7 @@ mymapservice:
 
 This project is licensed under the MIT license (see [LICENSE.txt][license]).
 
-[license]: https://github.com/agorf/slippy-map-tile-proxy/blob/master/LICENSE.txt
+[license]: https://github.com/agorf/tileproxy/blob/master/LICENSE.txt
 
 ## Author
 
