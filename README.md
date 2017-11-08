@@ -87,10 +87,10 @@ $ bundle exec rackup -p 8080
 To shut down the server, hit `Ctrl-C`.
 
 **Warning:** Before using a map tile service with this program, please ensure
-downloading tiles does not violate its terms of use. Additionally, virtually all
-map tile services require the display of a relevant copyright and/or attribution
-notice which this program cannot satisfy as it is a proxy server and not an
-end-user GUI.
+downloading and caching tiles does not violate its terms of use. Additionally,
+virtually all map tile services require the display of a relevant copyright
+and/or attribution notice which this program cannot satisfy as it is a proxy
+server and not an end-user GUI.
 
 [OpenStreetMap]: http://www.openstreetmap.org/
 
