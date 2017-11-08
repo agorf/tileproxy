@@ -24,52 +24,48 @@ class MapServer
     req = Rack::Request.new(env)
     match = req.path.match(PATH_REGEX)
 
-    if match
-      params           = Hash[match.names.map(&:to_sym).zip(match.captures)]
-      xyz              = params.values_at(:x, :y, :z).map(&:to_i)
-      params[:quadkey] = Quadkey.tile_to_quadkey(*xyz)
-      service_name     = params.delete(:service)
-      service          = SERVICES[service_name]
-
-      if service
-        service_params = service.symbolize_keys
-        service_url    = service_params.delete(:url)
-        tile_url       = service_url % service_params.merge(params)
-        tile_path      = File.join(ENV['HOME'], '.cache', 'tileproxy', req.path)
-
-        begin
-          if File.exist?(tile_path)
-            handle = open(tile_path)
-            status = 200
-          else
-            handle = open(tile_url)
-            status = handle.status[0].to_i
-          end
-
-          data = handle.read
-          content_type = 'image/png'
-
-          if !File.exist?(tile_path)
-            FileUtils.mkdir_p(File.dirname(tile_path))
-            open(tile_path, 'wb') { |f| f.write(data) }
-          end
-        rescue OpenURI::HTTPError => e
-          data         = e.message
-          status       = e.io.status[0].to_i
-          content_type = 'text/plain'
-        end
-      else
-        data = %(Service "#{service_name}" not found. Valid services: #{SERVICES.keys.sort.join(', ')})
-        status = 404
-        content_type = 'text/plain'
-      end
-    else
+    if match.nil?
       data = 'Invalid request path. Valid format: /service/z/x/y.png'
-      status = 400
-      content_type = 'text/plain'
+      return [400, { 'Content-Type' => 'text/plain' }, [data]]
     end
 
-    [status, { 'Content-Type' => content_type }, [data]]
+    params           = Hash[match.names.map(&:to_sym).zip(match.captures)]
+    xyz              = params.values_at(:x, :y, :z).map(&:to_i)
+    params[:quadkey] = Quadkey.tile_to_quadkey(*xyz)
+    service_name     = params.delete(:service)
+    service          = SERVICES[service_name]
+
+    if service.nil?
+      data = %(Service "#{service_name}" not found. Valid services: #{SERVICES.keys.sort.join(', ')})
+      return [404, { 'Content-Type' => 'text/plain' }, [data]]
+    end
+
+    service_params = service.symbolize_keys
+    service_url    = service_params.delete(:url)
+    tile_url       = service_url % service_params.merge(params)
+    tile_path      = File.join(ENV['HOME'], '.cache', 'tileproxy', req.path)
+
+    if File.exist?(tile_path)
+      data = open(tile_path).read
+      return [200, { 'Content-Type' => 'image/png' }, [data]]
+    end
+
+    begin
+      handle = open(tile_url)
+    rescue OpenURI::HTTPError => e
+      data = e.message
+      status = e.io.status[0].to_i
+      return [status, { 'Content-Type' => 'text/plain' }, [data]]
+    end
+
+    status = handle.status[0].to_i
+    data = handle.read
+
+    # Cache tile
+    FileUtils.mkdir_p(File.dirname(tile_path))
+    open(tile_path, 'wb') { |f| f.write(data) }
+
+    [status, { 'Content-Type' => 'image/png' }, [data]]
   end
 end
 
