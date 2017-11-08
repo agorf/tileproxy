@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open-uri'
 require 'quadkey'
 require 'rack'
@@ -7,12 +9,12 @@ use Rack::ContentLength
 
 class Hash
   def symbolize_keys
-    reduce({}) { |h, (k, v)| h[k.to_sym] = v; h }
+    each_with_object({}) { |(k, v), h| h[k.to_sym] = v }
   end
 end
 
 class MapServer
-  SERVICES = YAML.load(open('services.yaml')).freeze
+  SERVICES = YAML.safe_load(open('services.yaml')).freeze
 
   # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
   PATH_REGEX = %r{\A/(?<service>\w+)/(?<z>\d+)/(?<x>\d+)/(?<y>\d+)\.png\z}
@@ -44,7 +46,7 @@ class MapServer
           content_type = 'text/plain'
         end
       else
-        data = %Q{Service "#{service_name}" not found. Valid services: #{SERVICES.keys.sort.join(', ')}}
+        data = %(Service "#{service_name}" not found. Valid services: #{SERVICES.keys.sort.join(', ')})
         status = 404
         content_type = 'text/plain'
       end
