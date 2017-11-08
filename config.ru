@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'fileutils'
 require 'open-uri'
 require 'quadkey'
 require 'rack'
@@ -34,12 +35,24 @@ class MapServer
         service_params = service.symbolize_keys
         service_url    = service_params.delete(:url)
         tile_url       = service_url % service_params.merge(params)
+        tile_path      = File.join(ENV['HOME'], '.cache', 'tileproxy', req.path)
 
         begin
-          handle       = open(tile_url)
-          data         = handle.read
-          status       = handle.status[0].to_i
+          if File.exist?(tile_path)
+            handle = open(tile_path)
+            status = 200
+          else
+            handle = open(tile_url)
+            status = handle.status[0].to_i
+          end
+
+          data = handle.read
           content_type = 'image/png'
+
+          if !File.exist?(tile_path)
+            FileUtils.mkdir_p(File.dirname(tile_path))
+            open(tile_path, 'wb') { |f| f.write(data) }
+          end
         rescue OpenURI::HTTPError => e
           data         = e.message
           status       = e.io.status[0].to_i
