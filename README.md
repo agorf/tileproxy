@@ -1,6 +1,7 @@
 # tileproxy
 
-A minimal [slippy map tile][slippy] [Rack][]-based HTTP proxy and demultiplexer.
+A minimal [slippy map tile][slippy] [Rack][]-based HTTP caching proxy and
+demultiplexer.
 
 [slippy]: http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
 [Rack]: https://github.com/rack/rack
@@ -19,10 +20,12 @@ How do you bridge the two?
 
 This program does exactly that by sitting in the middle and translating the
 slippy map tile name to a request path that each map tile service can
-understand.
+understand. Additionally, it caches downloaded tiles so that they can be served
+from the filesystem in subsequent requests.
 
-It is also a demultiplexer as it can run once and dispatch HTTP requests to
-different map tile services based on the first component of the request path.
+Finally, it is also a demultiplexer as it can run once and dispatch HTTP
+requests to different map tile services based on the first component of the
+request path.
 
 [GpsPrune]: https://activityworkshop.net/software/gpsprune/
 
