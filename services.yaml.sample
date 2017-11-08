@@ -1,0 +1,4 @@
+---
+openstreetmap:
+  url: 'http://%{subdomain}.tile.openstreetmap.org/%{z}/%{x}/%{y}.png'
+  subdomain: a
