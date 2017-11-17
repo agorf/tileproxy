@@ -8,12 +8,12 @@ demultiplexer.
 
 ## Rationale
 
-Suppose you have a program like [GpsPrune][] that lets you define and use custom
-map tile services and which expects the service to accept HTTP requests in the
-[slippy map tile name][slippy] format e.g. `/13/4252/2916.png`, where `13` is
-the zoom, `4252` the x tile, and `2916` the y tile.
+Some mapping progreams (e.g. [GpsPrune][]) let you define and use custom map
+tile services, expecting the service to accept HTTP requests in the [slippy map
+tile name][slippy] format e.g. `/13/4252/2916.png`, where `13` is the zoom,
+`4252` the x tile, and `2916` the y tile.
 
-And suppose a map tile service you want to use responds to parameterized HTTP
+Suppose a map tile service you want to use responds to parameterized HTTP
 requests like `?z=13&x=4252&y=2916`.
 
 How do you bridge the two?
