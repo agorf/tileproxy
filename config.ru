@@ -53,9 +53,8 @@ class MapServer
     begin
       handle = open(tile_url)
     rescue OpenURI::HTTPError => e
-      data = e.message
-      status = e.io.status[0].to_i
-      return [status, { 'Content-Type' => 'text/plain' }, [data]]
+      data = "#{service_name} service responded with #{e.message}"
+      return [502, { 'Content-Type' => 'text/plain' }, [data]]
     end
 
     status = handle.status[0].to_i
