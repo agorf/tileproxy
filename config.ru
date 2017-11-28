@@ -18,7 +18,7 @@ class MapServer
   SERVICES = YAML.safe_load(open('services.yaml')).freeze
 
   # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-  PATH_REGEX = %r{\A/(?<service>\w+)/(?<z>\d+)/(?<x>\d+)/(?<y>\d+)\.png\z}
+  PATH_REGEX = %r{\A/+(?<service>\w+)/+(?<z>\d+)/+(?<x>\d+)/+(?<y>\d+)\.png\z}
 
   def call(env)
     req = Rack::Request.new(env)
