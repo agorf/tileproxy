@@ -20,8 +20,10 @@ How do you bridge the two?
 
 This program does exactly that by sitting in the middle and translating the
 slippy map tile name to a request path that each map tile service can
-understand. Additionally, it caches downloaded tiles so that they can be served
-from the filesystem in subsequent requests.
+understand.
+
+Additionally, it caches downloaded tiles so that they can be served from the
+filesystem in subsequent requests.
 
 Finally, it is also a demultiplexer as it can run once and dispatch HTTP
 requests to different map tile services based on the first component of the
