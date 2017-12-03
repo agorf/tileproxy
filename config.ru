@@ -43,7 +43,7 @@ class MapServer
     service_params = service.symbolize_keys
     service_url    = service_params.delete(:url)
     tile_url       = service_url % service_params.merge(params)
-    tile_path      = File.join(ENV['HOME'], '.cache', 'tileproxy', req.path)
+    tile_path      = File.join(ENV.fetch('HOME'), '.cache', 'tileproxy', req.path)
 
     if File.exist?(tile_path)
       data = open(tile_path).read
