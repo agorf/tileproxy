@@ -57,12 +57,14 @@ class MapServer
       return [502, { 'Content-Type' => 'text/plain' }, [data]]
     end
 
-    status = handle.status[0].to_i
-    data = handle.read
-
     # Cache tile
     FileUtils.mkdir_p(File.dirname(tile_path))
-    open(tile_path, 'wb') { |f| f.write(data) }
+    open(tile_path, 'wb') { |f| IO.copy_stream(handle, f) }
+
+    handle.rewind
+
+    status = handle.status[0].to_i
+    data = handle.read
 
     [status, { 'Content-Type' => 'image/png' }, [data]]
   end
