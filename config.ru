@@ -60,13 +60,11 @@ class MapServer
     # Cache tile
     FileUtils.mkdir_p(File.dirname(tile_path))
     open(tile_path, 'wb') { |f| IO.copy_stream(handle, f) }
-
     handle.rewind
 
     status = handle.status[0].to_i
-    data = handle.read
 
-    [status, { 'Content-Type' => 'image/png' }, [data]]
+    [status, { 'Content-Type' => 'image/png' }, handle]
   end
 end
 
