@@ -72,25 +72,29 @@ Clone the repository:
 
 ~~~ sh
 $ git clone https://github.com/agorf/tileproxy.git
-~~~
-
-Enter the directory:
-
-~~~ sh
 $ cd tileproxy
 ~~~
 
-Install the gems with [Bundler][]:
+With [Docker][], you don't need Ruby, Bundler, Gems etc. Just build the image:
 
-~~~ sh
-$ bundle install
-~~~
+    $ docker-compose build tileproxy
 
+If you don't have Docker, install the necessary Gems with [Bundler][]:
+
+    $ bundle install
+
+[Docker]: https://www.docker.com/
 [Bundler]: https://bundler.io/
 
 ## Usage
 
-Run the server on port 9292 (default):
+Run the server on port 9292 (default) with [Docker][]:
+
+~~~ sh
+docker-compose up tileproxy
+~~~
+
+Without Docker:
 
 ~~~ sh
 $ bundle exec rackup
