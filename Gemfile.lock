@@ -3,7 +3,7 @@ GEM
   specs:
     puma (3.10.0)
     quadkey (0.2.0)
-    rack (2.0.6)
+    rack (2.0.8)
 
 PLATFORMS
   ruby
@@ -11,7 +11,7 @@ PLATFORMS
 DEPENDENCIES
   puma (~> 3.10.0)
   quadkey (~> 0.2.0)
-  rack (~> 2.0.6)
+  rack (~> 2.0.8)
 
 BUNDLED WITH
    1.16.0
