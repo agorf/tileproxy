@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    puma (3.10.0)
+    puma (3.12.3)
     quadkey (0.2.0)
     rack (2.0.6)
 
@@ -9,7 +9,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  puma (~> 3.10.0)
+  puma (~> 3.12.3)
   quadkey (~> 0.2.0)
   rack (~> 2.0.6)
 
