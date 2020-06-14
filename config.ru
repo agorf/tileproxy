@@ -61,6 +61,11 @@ class MapServer
       return [502, { 'Content-Type' => 'text/plain' }, [data]]
     end
 
+    if remote_file.size == 0
+      data = 'Remote file is empty'
+      return [502, { 'Content-Type' => 'text/plain' }, [data]]
+    end
+
     # Cache tile
     FileUtils.mkdir_p(File.dirname(tile_path))
     File.open(tile_path, 'wb') do |local_file|
