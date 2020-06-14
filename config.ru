@@ -56,6 +56,11 @@ class MapServer
       return [502, { 'Content-Type' => 'text/plain' }, [data]]
     end
 
+    if remote_file.content_type.to_s.split('/', 2)[0] != 'image'
+      data = "Remote file Content-Type #{remote_file.content_type} is not an image"
+      return [502, { 'Content-Type' => 'text/plain' }, [data]]
+    end
+
     # Cache tile
     FileUtils.mkdir_p(File.dirname(tile_path))
     File.open(tile_path, 'wb') do |local_file|
