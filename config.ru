@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'fileutils'
 require 'open-uri'
 require 'quadkey'
@@ -18,7 +16,8 @@ class MapServer
   SERVICES = YAML.safe_load(open('services.yaml')).freeze
 
   # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-  PATH_REGEX = %r{\A/+(?<service>\w+)/+(?<z>\d+)/+(?<x>\d+)/+(?<y>\d+)\.png\z}
+  PATH_REGEX =
+    %r{\A/+(?<service>\w+)/+(?<z>\d+)/+(?<x>\d+)/+(?<y>\d+)\.png\z}.freeze
 
   def call(env)
     req = Rack::Request.new(env)
@@ -29,11 +28,11 @@ class MapServer
       return [400, { 'Content-Type' => 'text/plain' }, [data]]
     end
 
-    params           = Hash[match.names.map(&:to_sym).zip(match.captures)]
-    xyz              = params.values_at(:x, :y, :z).map(&:to_i)
+    params = Hash[match.names.map(&:to_sym).zip(match.captures)]
+    xyz = params.values_at(:x, :y, :z).map(&:to_i)
     params[:quadkey] = Quadkey.tile_to_quadkey(*xyz)
-    service_name     = params.delete(:service)
-    service          = SERVICES[service_name]
+    service_name = params.delete(:service)
+    service = SERVICES[service_name]
 
     if service.nil?
       data = %(Service "#{service_name}" not found. Valid services: #{SERVICES.keys.sort.join(', ')})
@@ -41,17 +40,17 @@ class MapServer
     end
 
     service_params = service.symbolize_keys
-    service_url    = service_params.delete(:url)
-    tile_url       = service_url % service_params.merge(params)
-    tile_path      = File.join(ENV.fetch('HOME'), '.cache', 'tileproxy', req.path)
+    service_url = service_params.delete(:url)
+    tile_url = service_url % service_params.merge(params)
+    tile_path = File.join(ENV.fetch('HOME'), '.cache', 'tileproxy', req.path)
 
     if File.exist?(tile_path)
-      data = open(tile_path).read
+      data = File.open(tile_path).read
       return [200, { 'Content-Type' => 'image/png' }, [data]]
     end
 
     begin
-      handle = open(tile_url)
+      handle = URI.open(tile_url)
     rescue OpenURI::HTTPError => e
       data = "#{service_name} service responded with #{e.message}"
       return [502, { 'Content-Type' => 'text/plain' }, [data]]
@@ -59,7 +58,7 @@ class MapServer
 
     # Cache tile
     FileUtils.mkdir_p(File.dirname(tile_path))
-    open(tile_path, 'wb') { |f| IO.copy_stream(handle, f) }
+    File.open(tile_path, 'wb') { |f| IO.copy_stream(handle, f) }
     handle.rewind
 
     status = handle.status[0].to_i
