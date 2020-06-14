@@ -17,14 +17,14 @@ class MapServer
 
   # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
   PATH_REGEX =
-    %r{\A/+(?<service>\w+)/+(?<z>\d+)/+(?<x>\d+)/+(?<y>\d+)\.png\z}.freeze
+    %r{\A/+(?<service>\w+)/+(?<z>\d+)/+(?<x>\d+)/+(?<y>\d+)\.\w+\z}.freeze
 
   def call(env)
     req = Rack::Request.new(env)
     match = req.path.match(PATH_REGEX)
 
     if match.nil?
-      data = 'Invalid request path. Valid format: /service/z/x/y.png'
+      data = 'Invalid request path. Valid format: /service/z/x/y.ext'
       return [400, { 'Content-Type' => 'text/plain' }, [data]]
     end
 
@@ -38,10 +38,22 @@ class MapServer
     end
 
     tile_path = File.join(ENV.fetch('HOME'), '.cache', 'tileproxy', req.path)
+    extname = File.extname(tile_path)
+    content_type = Rack::Mime::MIME_TYPES[extname]
+
+    if content_type.nil?
+      data = "Unknown Content-Type for requested file extension #{extname}"
+      return [400, { 'Content-Type' => 'text/plain' }, [data]]
+    end
+
+    if content_type.split('/', 2)[0] != 'image'
+      data = "Non-image Content-Type #{content_type} for requested file extension #{extname}"
+      return [400, { 'Content-Type' => 'text/plain' }, [data]]
+    end
 
     if File.exist?(tile_path)
       data = File.open(tile_path).read
-      return [200, { 'Content-Type' => 'image/png' }, [data]]
+      return [200, { 'Content-Type' => content_type }, [data]]
     end
 
     xyz = params.values_at(:x, :y, :z).map(&:to_i)
@@ -62,6 +74,11 @@ class MapServer
       return [502, { 'Content-Type' => 'text/plain' }, [data]]
     end
 
+    if remote_file.content_type != content_type
+      data = "Remote file Content-Type #{remote_file.content_type} is not #{content_type}"
+      return [400, { 'Content-Type' => 'text/plain' }, [data]]
+    end
+
     if remote_file.size == 0
       data = 'Remote file is empty'
       return [502, { 'Content-Type' => 'text/plain' }, [data]]
@@ -77,7 +94,7 @@ class MapServer
     status = remote_file.status[0].to_i
     data = remote_file.read
 
-    [status, { 'Content-Type' => 'image/png' }, [data]]
+    [status, { 'Content-Type' => remote_file.content_type }, [data]]
   end
 end
 
