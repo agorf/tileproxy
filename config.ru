@@ -74,8 +74,9 @@ class MapServer
     remote_file.rewind
 
     status = remote_file.status[0].to_i
+    data = remote_file.read
 
-    [status, { 'Content-Type' => 'image/png' }, remote_file]
+    [status, { 'Content-Type' => 'image/png' }, [data]]
   end
 end
 
