@@ -29,8 +29,6 @@ class MapServer
     end
 
     params = Hash[match.names.map(&:to_sym).zip(match.captures)]
-    xyz = params.values_at(:x, :y, :z).map(&:to_i)
-    params[:quadkey] = Quadkey.tile_to_quadkey(*xyz)
     service_name = params.delete(:service)
     service = SERVICES[service_name]
 
@@ -39,15 +37,18 @@ class MapServer
       return [404, { 'Content-Type' => 'text/plain' }, [data]]
     end
 
-    service_params = service.symbolize_keys
-    service_url = service_params.delete(:url)
-    tile_url = service_url % service_params.merge(params)
     tile_path = File.join(ENV.fetch('HOME'), '.cache', 'tileproxy', req.path)
 
     if File.exist?(tile_path)
       data = File.open(tile_path).read
       return [200, { 'Content-Type' => 'image/png' }, [data]]
     end
+
+    xyz = params.values_at(:x, :y, :z).map(&:to_i)
+    params[:quadkey] = Quadkey.tile_to_quadkey(*xyz)
+    service_params = service.symbolize_keys
+    service_url = service_params.delete(:url)
+    tile_url = service_url % service_params.merge(params)
 
     begin
       remote_file = URI.open(tile_url)
