@@ -50,7 +50,7 @@ class MapServer
     end
 
     begin
-      handle = URI.open(tile_url)
+      remote_file = URI.open(tile_url)
     rescue OpenURI::HTTPError => e
       data = "#{service_name} service responded with #{e.message}"
       return [502, { 'Content-Type' => 'text/plain' }, [data]]
@@ -58,12 +58,14 @@ class MapServer
 
     # Cache tile
     FileUtils.mkdir_p(File.dirname(tile_path))
-    File.open(tile_path, 'wb') { |f| IO.copy_stream(handle, f) }
-    handle.rewind
+    File.open(tile_path, 'wb') do |local_file|
+      IO.copy_stream(remote_file, local_file)
+    end
+    remote_file.rewind
 
-    status = handle.status[0].to_i
+    status = remote_file.status[0].to_i
 
-    [status, { 'Content-Type' => 'image/png' }, handle]
+    [status, { 'Content-Type' => 'image/png' }, remote_file]
   end
 end
 
