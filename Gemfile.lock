@@ -28,6 +28,3 @@ DEPENDENCIES
   quadkey (~> 0.2.0)
   rack (~> 2.1.4)
   rerun (~> 0.13.0)
-
-BUNDLED WITH
-   1.17.2
