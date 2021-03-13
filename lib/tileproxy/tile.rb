@@ -48,7 +48,7 @@ module Tileproxy
     end
 
     private def bottom_right
-      Tile.new(x + 1, y + 1, z)
+      Tile.new(x + 1, y + 1, z, extension: extension)
     end
   end
 end
