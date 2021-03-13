@@ -127,4 +127,4 @@ server and not an end-user GUI.
 
 ## Author
 
-[Angelos Orfanakos](https://agorf.gr/)
+[Angelos Orfanakos](https://angelos.dev/)
