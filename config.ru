@@ -123,18 +123,18 @@ class MapServer
   end
 
   private def tile_url
-    service_args = service.dup
-    service_url = service_args.delete(:url)
+    args = service.dup
+    format = args.delete(:url)
 
     x, y, z = params.values_at(:x, :y, :z).map(&:to_i)
-    service_args.merge!(
+    args.merge!(
       x: x,
       y: y,
       z: z,
       quadkey: tile_to_quadkey(x, y, z)
     )
 
-    sprintf(service_url, service_args)
+    sprintf(format, args)
   end
 
   private def tile_to_quadkey(x, y, z)
