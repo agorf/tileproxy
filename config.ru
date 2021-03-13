@@ -70,6 +70,13 @@ class MapServer
     params[:quadkey] = tile_to_quadkey(*xyz)
     service_params = service.transform_keys(&:to_sym)
     service_url = service_params.delete(:url)
+    service_params.transform_values! do |value|
+      if value.is_a?(Array)
+        value.sample
+      else
+        value
+      end
+    end
     tile_url = sprintf(service_url, service_params.merge(params))
 
     begin

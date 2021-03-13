@@ -57,6 +57,15 @@ mymapservice:
   access_token: 'myaccesstoken'
 ~~~
 
+It is also possible to distribute requests among many servers by using an array
+of values. For example:
+
+~~~ yaml
+openstreetmap:
+  url: 'http://%{server}.tile.openstreetmap.org/%{z}/%{x}/%{y}.png'
+  server: ['a', 'b', 'c']
+~~~
+
 To start off, copy the sample services YAML file to `services.yaml` and
 customize it if necessary:
 

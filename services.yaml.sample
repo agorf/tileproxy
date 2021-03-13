@@ -1,4 +1,4 @@
 ---
 openstreetmap:
-  url: 'http://%{subdomain}.tile.openstreetmap.org/%{z}/%{x}/%{y}.png'
-  subdomain: a
+  url: 'http://%{server}.tile.openstreetmap.org/%{z}/%{x}/%{y}.png'
+  server: ['a', 'b', 'c']
