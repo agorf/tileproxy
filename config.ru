@@ -38,7 +38,7 @@ class MapServer
     if service.empty?
       return respond_with_message(
         :not_found,
-        %(Service "#{service_name}" not found. Valid services: #{SERVICES.keys.sort.join(', ')})
+        %(Service "#{service_name}" not found. Available services: #{SERVICES.keys.sort.join(', ')})
       )
     end
 
