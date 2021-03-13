@@ -46,7 +46,10 @@ following placeholders are supported:
 * `%{z}` is replaced with the requested zoom (or precision)
 * `%{x}` is replaced with the requested x tile
 * `%{y}` is replaced with the requested y tile
-* `%{quadkey}` is the [quadkey][]-encoded value of the zoom, x and y tile values
+* `%{bbox}` is replaced with the [Spherical Mercator][mercator] bounding box of
+  the zoom, x and y tiles, used in [WMS][]
+* `%{quadkey}` is replaced with the [quadkey][]-encoded value of the zoom, x and
+  y tiles
 
 Any other placeholder not in the above list is replaced by key-value pairs that
 must be present in the mapping value of the service. For example:
@@ -73,6 +76,8 @@ customize it:
 $ cp services.yaml.sample services.yaml
 ~~~
 
+[mercator]: https://en.wikipedia.org/wiki/Web_Mercator_projection
+[WMS]: https://en.wikipedia.org/wiki/Web_Map_Service
 [quadkey]: https://msdn.microsoft.com/en-us/library/bb259689.aspx
 
 ## Installation

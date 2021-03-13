@@ -3,6 +3,8 @@ require 'open-uri'
 require 'rack'
 require 'yaml'
 
+require_relative 'lib/tileproxy/tile'
+
 use Rack::ContentLength
 
 class MapServer
@@ -59,7 +61,9 @@ class MapServer
       )
     end
 
-    tile_path = File.join(TILE_CACHE_PATH, req.path)
+    xyz = params.values_at(:x, :y, :z).map(&:to_i)
+    tile = Tileproxy::Tile.new(*xyz, extension: extname)
+    tile_path = File.join(TILE_CACHE_PATH, tile.path)
 
     if File.exist?(tile_path)
       data = File.open(tile_path).read
@@ -67,7 +71,7 @@ class MapServer
     end
 
     begin
-      remote_file = URI.open(tile_url)
+      remote_file = URI.open(tile_url(tile))
     rescue OpenURI::HTTPError => e
       return respond_with_message(
         :bad_gateway,
@@ -122,29 +126,19 @@ class MapServer
       end
   end
 
-  private def tile_url
+  private def tile_url(tile)
     args = service.dup
-    format = args.delete(:url)
+    format = args.delete(:url).gsub(/%(?!{)/, '%%') # Escape %
 
-    x, y, z = params.values_at(:x, :y, :z).map(&:to_i)
     args.merge!(
-      x: x,
-      y: y,
-      z: z,
-      quadkey: tile_to_quadkey(x, y, z)
+      x: tile.x,
+      y: tile.y,
+      z: tile.z,
+      bbox: tile.bbox_str,
+      quadkey: tile.quadkey
     )
 
     sprintf(format, args)
-  end
-
-  private def tile_to_quadkey(x, y, z)
-    z.downto(1).reduce([]) { |digits, i|
-      digit = '0'.ord
-      mask = 1 << i - 1
-      digit += 1 if x & mask != 0
-      digit += 2 if y & mask != 0
-      digits << digit.chr
-    }.join
   end
 
   private def respond(status, content_type, data)
