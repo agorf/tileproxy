@@ -113,24 +113,13 @@ class MapServer
   end
 
   private def tile_to_quadkey(x, y, z)
-    quadkey = []
-
-    z.downto(1) do |i|
+    z.downto(1).reduce([]) { |quadkey, i|
       digit = '0'.ord
       mask = 1 << i - 1
-
-      if x & mask != 0
-        digit += 1
-      end
-
-      if y & mask != 0
-        digit += 2
-      end
-
+      digit += 1 if x & mask != 0
+      digit += 2 if y & mask != 0
       quadkey << digit.chr
-    end
-
-    quadkey.join
+    }.join
   end
 
   private def respond(status, content_type, data)
