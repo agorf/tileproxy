@@ -67,7 +67,7 @@ openstreetmap:
 ~~~
 
 To start off, copy the sample services YAML file to `services.yaml` and
-customize it if necessary:
+customize it:
 
 ~~~ sh
 $ cp services.yaml.sample services.yaml
