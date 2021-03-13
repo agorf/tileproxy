@@ -35,7 +35,7 @@ class MapServer
 
     @params = Hash[match.names.map(&:to_sym).zip(match.captures)]
 
-    if service_params.empty?
+    if service.empty?
       return respond_with_message(
         :not_found,
         %(Service "#{service_name}" not found. Valid services: #{SERVICES.keys.sort.join(', ')})
@@ -110,7 +110,7 @@ class MapServer
     params.fetch(:service)
   end
 
-  private def service_params
+  private def service
     SERVICES.fetch(service_name, {}).
       transform_keys(&:to_sym).
       transform_values do |value|
@@ -123,7 +123,7 @@ class MapServer
   end
 
   private def tile_url
-    service_args = service_params.dup
+    service_args = service.dup
     service_url = service_args.delete(:url)
 
     x, y, z = params.values_at(:x, :y, :z).map(&:to_i)
