@@ -25,8 +25,10 @@ class MapServer
     match = req.path.match(PATH_REGEX)
 
     if match.nil?
-      data = 'Invalid request path. Valid format: /service/z/x/y.ext'
-      return respond(:bad_request, 'text/plain', data)
+      return respond_with_message(
+        :bad_request,
+        'Invalid request path. Valid format: /service/z/x/y.ext'
+      )
     end
 
     params = Hash[match.names.map(&:to_sym).zip(match.captures)]
@@ -34,28 +36,34 @@ class MapServer
     service = SERVICES[service_name]
 
     if service.nil?
-      data = %(Service "#{service_name}" not found. Valid services: #{SERVICES.keys.sort.join(', ')})
-      return respond(:not_found, 'text/plain', data)
+      return respond_with_message(
+        :not_found,
+        %(Service "#{service_name}" not found. Valid services: #{SERVICES.keys.sort.join(', ')})
+      )
     end
 
     extname = File.extname(req.path)
     content_type = Rack::Mime::MIME_TYPES[extname]
 
     if content_type.nil?
-      data = "Unknown Content-Type for requested file extension #{extname}"
-      return respond(:bad_request, 'text/plain', data)
+      return respond_with_message(
+        :bad_request,
+        "Unknown Content-Type for requested file extension #{extname}"
+      )
     end
 
     if content_type.split('/', 2)[0] != 'image'
-      data = "Non-image Content-Type #{content_type} for requested file extension #{extname}"
-      return respond(:bad_request, 'text/plain', data)
+      return respond_with_message(
+        :bad_request,
+        "Non-image Content-Type #{content_type} for requested file extension #{extname}"
+      )
     end
 
     tile_path = File.join(TILE_CACHE_PATH, req.path)
 
     if File.exist?(tile_path)
       data = File.open(tile_path).read
-      return respond(:ok, content_type, data)
+      return respond(:ok, content_type, [data])
     end
 
     xyz = params.values_at(:x, :y, :z).map(&:to_i)
@@ -67,23 +75,28 @@ class MapServer
     begin
       remote_file = URI.open(tile_url)
     rescue OpenURI::HTTPError => e
-      data = "#{service_name} service responded with #{e.message}"
-      return respond(:bad_gateway, 'text/plain', data)
+      return respond_with_message(
+        :bad_gateway,
+        "#{service_name} service responded with #{e.message}"
+      )
     end
 
     if remote_file.content_type.to_s.split('/', 2)[0] != 'image'
-      data = "Remote file Content-Type #{remote_file.content_type} is not an image"
-      return respond(:bad_gateway, 'text/plain', data)
+      return respond_with_message(
+        :bad_gateway,
+        "Remote file Content-Type #{remote_file.content_type} is not an image"
+      )
     end
 
     if remote_file.content_type != content_type
-      data = "Remote file Content-Type #{remote_file.content_type} is not #{content_type}"
-      return respond(:bad_request, 'text/plain', data)
+      return respond_with_message(
+        :bad_request,
+        "Remote file Content-Type #{remote_file.content_type} is not #{content_type}"
+      )
     end
 
     if remote_file.size == 0
-      data = 'Remote file is empty'
-      return respond(:bad_gateway, 'text/plain', data)
+      return respond_with_message(:bad_gateway, 'Remote file is empty')
     end
 
     # Cache tile
@@ -121,13 +134,11 @@ class MapServer
   end
 
   private def respond(status, content_type, data)
-    data =
-      if data.respond_to?(:each)
-        data
-      else
-        [data]
-      end
     [HTTP_STATUS.fetch(status), { 'Content-Type' => content_type }, data]
+  end
+
+  private def respond_with_message(status, message)
+    respond(status, 'text/plain', [message.chomp + "\n"])
   end
 end
 
