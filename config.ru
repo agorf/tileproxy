@@ -5,12 +5,6 @@ require 'yaml'
 
 use Rack::ContentLength
 
-class Hash
-  def symbolize_keys
-    each_with_object({}) { |(k, v), h| h[k.to_sym] = v }
-  end
-end
-
 class MapServer
   SERVICES = YAML.safe_load(open('services.yaml')).freeze
 
@@ -57,7 +51,7 @@ class MapServer
 
     xyz = params.values_at(:x, :y, :z).map(&:to_i)
     params[:quadkey] = tile_to_quadkey(*xyz)
-    service_params = service.symbolize_keys
+    service_params = service.transform_keys(&:to_sym)
     service_url = service_params.delete(:url)
     tile_url = sprintf(service_url, service_params.merge(params))
 
