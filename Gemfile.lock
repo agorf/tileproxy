@@ -28,3 +28,6 @@ DEPENDENCIES
   puma (~> 5.2.2)
   rack (~> 2.2.3)
   rerun (~> 0.13.0)
+
+BUNDLED WITH
+   2.1.4
