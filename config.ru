@@ -31,8 +31,7 @@ class MapServer
       return [404, { 'Content-Type' => 'text/plain' }, [data]]
     end
 
-    tile_path = File.join(TILE_CACHE_PATH, req.path)
-    extname = File.extname(tile_path)
+    extname = File.extname(req.path)
     content_type = Rack::Mime::MIME_TYPES[extname]
 
     if content_type.nil?
@@ -44,6 +43,8 @@ class MapServer
       data = "Non-image Content-Type #{content_type} for requested file extension #{extname}"
       return [400, { 'Content-Type' => 'text/plain' }, [data]]
     end
+
+    tile_path = File.join(TILE_CACHE_PATH, req.path)
 
     if File.exist?(tile_path)
       data = File.open(tile_path).read
