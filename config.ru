@@ -92,7 +92,7 @@ class MapServer
     [status, { 'Content-Type' => remote_file.content_type }, [data]]
   end
 
-  def tile_to_quadkey(x, y, z)
+  private def tile_to_quadkey(x, y, z)
     quadkey = []
 
     z.downto(1) do |i|
