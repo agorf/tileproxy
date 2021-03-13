@@ -127,11 +127,13 @@ To shut down the server, hit `Ctrl-C`
 
 To clear the cache, remove the path `~/.cache/tileproxy`
 
-**Disclaimer:** Before using a map tile service with this program, please ensure
-downloading and caching tiles does not violate the service's terms of use. Know
-that virtually all map tile services require the display of a relevant copyright
-and/or attribution notice which this program does not satisfy as it is a proxy
-server and not an end-user GUI.
+## Disclaimer
+
+Before using a map tile service with this program, please ensure downloading and
+caching tiles does not violate the service's terms of use. Know that virtually
+all map tile services require the display of a relevant copyright and/or
+attribution notice which this program does not satisfy as it is a proxy server
+and not an end-user GUI.
 
 [OpenStreetMap]: https://www.openstreetmap.org/
 
