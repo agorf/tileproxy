@@ -59,7 +59,7 @@ class MapServer
     params[:quadkey] = tile_to_quadkey(*xyz)
     service_params = service.symbolize_keys
     service_url = service_params.delete(:url)
-    tile_url = service_url % service_params.merge(params)
+    tile_url = sprintf(service_url, service_params.merge(params))
 
     begin
       remote_file = URI.open(tile_url)
