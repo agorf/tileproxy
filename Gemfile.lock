@@ -13,7 +13,7 @@ GEM
       method_source (~> 1.0)
     puma (5.2.2)
       nio4r (~> 2.0)
-    rack (2.1.4)
+    rack (2.2.3)
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -26,5 +26,5 @@ PLATFORMS
 DEPENDENCIES
   pry (~> 0.13.1)
   puma (~> 5.2.2)
-  rack (~> 2.1.4)
+  rack (~> 2.2.3)
   rerun (~> 0.13.0)
