@@ -20,6 +20,8 @@ class MapServer
     bad_gateway: 502
   }.freeze
 
+  attr_reader :params
+
   def call(env)
     req = Rack::Request.new(env)
     match = req.path.match(PATH_REGEX)
@@ -31,11 +33,9 @@ class MapServer
       )
     end
 
-    params = Hash[match.names.map(&:to_sym).zip(match.captures)]
-    service_name = params.delete(:service)
-    service = SERVICES[service_name]
+    @params = Hash[match.names.map(&:to_sym).zip(match.captures)]
 
-    if service.nil?
+    if service_params.empty?
       return respond_with_message(
         :not_found,
         %(Service "#{service_name}" not found. Valid services: #{SERVICES.keys.sort.join(', ')})
@@ -65,19 +65,6 @@ class MapServer
       data = File.open(tile_path).read
       return respond(:ok, content_type, [data])
     end
-
-    xyz = params.values_at(:x, :y, :z).map(&:to_i)
-    params[:quadkey] = tile_to_quadkey(*xyz)
-    service_params = service.transform_keys(&:to_sym)
-    service_url = service_params.delete(:url)
-    service_params.transform_values! do |value|
-      if value.is_a?(Array)
-        value.sample
-      else
-        value
-      end
-    end
-    tile_url = sprintf(service_url, service_params.merge(params))
 
     begin
       remote_file = URI.open(tile_url)
@@ -117,6 +104,37 @@ class MapServer
     data = remote_file.read
 
     [status, { 'Content-Type' => remote_file.content_type }, [data]]
+  end
+
+  private def service_name
+    params.fetch(:service)
+  end
+
+  private def service_params
+    SERVICES.fetch(service_name, {}).
+      transform_keys(&:to_sym).
+      transform_values do |value|
+        if value.is_a?(Array)
+          value.sample
+        else
+          value
+        end
+      end
+  end
+
+  private def tile_url
+    service_args = service_params.dup
+    service_url = service_args.delete(:url)
+
+    x, y, z = params.values_at(:x, :y, :z).map(&:to_i)
+    service_args.merge!(
+      x: x,
+      y: y,
+      z: z,
+      quadkey: tile_to_quadkey(x, y, z),
+    )
+
+    sprintf(service_url, service_args)
   end
 
   private def tile_to_quadkey(x, y, z)
