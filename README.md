@@ -53,7 +53,7 @@ must be present in the mapping value of the service. For example:
 
 ~~~ yaml
 mymapservice:
-  url: 'http://mymapservice.com/?z=%{z}&x=%{x}&y=%{y}.png?access_token=%{access_token}'
+  url: 'https://mymapservice.com/?z=%{z}&x=%{x}&y=%{y}.png?access_token=%{access_token}'
   access_token: 'myaccesstoken'
 ~~~
 
@@ -62,7 +62,7 @@ of values. For example:
 
 ~~~ yaml
 openstreetmap:
-  url: 'http://%{server}.tile.openstreetmap.org/%{z}/%{x}/%{y}.png'
+  url: 'https://%{server}.tile.openstreetmap.org/%{z}/%{x}/%{y}.png'
   server: ['a', 'b', 'c']
 ~~~
 

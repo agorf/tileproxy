@@ -1,4 +1,4 @@
 ---
 openstreetmap:
-  url: 'http://%{server}.tile.openstreetmap.org/%{z}/%{x}/%{y}.png'
+  url: 'https://%{server}.tile.openstreetmap.org/%{z}/%{x}/%{y}.png'
   server: ['a', 'b', 'c']
