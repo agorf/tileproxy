@@ -131,7 +131,7 @@ class MapServer
       x: x,
       y: y,
       z: z,
-      quadkey: tile_to_quadkey(x, y, z),
+      quadkey: tile_to_quadkey(x, y, z)
     )
 
     sprintf(service_url, service_args)
