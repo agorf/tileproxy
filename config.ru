@@ -7,6 +7,7 @@ use Rack::ContentLength
 
 class MapServer
   SERVICES = YAML.safe_load(open('services.yaml')).freeze
+  TILE_CACHE_PATH = File.join(ENV.fetch('HOME'), '.cache', 'tileproxy')
 
   # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
   PATH_REGEX =
@@ -30,7 +31,7 @@ class MapServer
       return [404, { 'Content-Type' => 'text/plain' }, [data]]
     end
 
-    tile_path = File.join(ENV.fetch('HOME'), '.cache', 'tileproxy', req.path)
+    tile_path = File.join(TILE_CACHE_PATH, req.path)
     extname = File.extname(tile_path)
     content_type = Rack::Mime::MIME_TYPES[extname]
 
