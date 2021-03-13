@@ -33,10 +33,10 @@ request path.
 
 ## Configuration
 
-This program is configured with a `services.yaml` file that must be present in
+This program is configured with a `services.yml` file that must be present in
 the same directory as `config.ru`
 
-`services.yaml` is a YAML file which contains a mapping with service names as
+`services.yml` is a YAML file which contains a mapping with service names as
 keys and additional mappings as values. Service names may be composed of
 lowercase and uppercase letters, numbers and underscore characters.
 
@@ -69,11 +69,11 @@ openstreetmap:
   server: ['a', 'b', 'c']
 ~~~
 
-To start off, copy the sample services YAML file to `services.yaml` and
+To start off, copy the sample services YAML file to `services.yml` and
 customize it:
 
 ~~~ sh
-$ cp services.yaml.sample services.yaml
+$ cp services.yml.sample services.yml
 ~~~
 
 [mercator]: https://en.wikipedia.org/wiki/Web_Mercator_projection

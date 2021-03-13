@@ -8,7 +8,7 @@ require_relative 'lib/tileproxy/tile'
 use Rack::ContentLength
 
 class MapServer
-  SERVICES = YAML.safe_load(open('services.yaml')).freeze
+  SERVICES = YAML.safe_load(open('services.yml')).freeze
   TILE_CACHE_PATH = File.join(ENV.fetch('HOME'), '.cache', 'tileproxy')
 
   # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
