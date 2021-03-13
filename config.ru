@@ -1,6 +1,5 @@
 require 'fileutils'
 require 'open-uri'
-require 'quadkey'
 require 'rack'
 require 'yaml'
 
@@ -57,7 +56,7 @@ class MapServer
     end
 
     xyz = params.values_at(:x, :y, :z).map(&:to_i)
-    params[:quadkey] = Quadkey.tile_to_quadkey(*xyz)
+    params[:quadkey] = tile_to_quadkey(*xyz)
     service_params = service.symbolize_keys
     service_url = service_params.delete(:url)
     tile_url = service_url % service_params.merge(params)
@@ -95,6 +94,27 @@ class MapServer
     data = remote_file.read
 
     [status, { 'Content-Type' => remote_file.content_type }, [data]]
+  end
+
+  def tile_to_quadkey(x, y, z)
+    quadkey = []
+
+    z.downto(1) do |i|
+      digit = '0'.ord
+      mask = 1 << i - 1
+
+      if x & mask != 0
+        digit += 1
+      end
+
+      if y & mask != 0
+        digit += 2
+      end
+
+      quadkey << digit.chr
+    end
+
+    quadkey.join
   end
 end
 

@@ -11,7 +11,6 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     puma (3.12.6)
-    quadkey (0.2.0)
     rack (2.1.4)
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
@@ -25,6 +24,5 @@ PLATFORMS
 DEPENDENCIES
   pry (~> 0.13.1)
   puma (~> 3.12.6)
-  quadkey (~> 0.2.0)
   rack (~> 2.1.4)
   rerun (~> 0.13.0)
