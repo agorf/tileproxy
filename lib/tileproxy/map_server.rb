@@ -1,13 +1,10 @@
 require 'fileutils'
 require 'open-uri'
-require 'yaml'
 
 require_relative 'tile'
 
 module Tileproxy
   class MapServer
-    SERVICES = YAML.safe_load(open('services.yml')).freeze
-
     HTTP_STATUS = {
       ok: 200,
       bad_request: 400,
@@ -15,17 +12,7 @@ module Tileproxy
       bad_gateway: 502
     }.freeze
 
-    def call(path)
-      service_name = path.fetch(:service)
-      service = service_with_name(service_name)
-
-      if service.empty?
-        return respond_with_message(
-          :not_found,
-          %(Service "#{service_name}" not found. Available services: #{SERVICES.keys.sort.join(', ')})
-        )
-      end
-
+    def call(path, service)
       extension = path.fetch(:ext)
       content_type = Rack::Mime::MIME_TYPES[extension.downcase]
 
@@ -47,11 +34,11 @@ module Tileproxy
       tile = Tileproxy::Tile.new(*xyz, extension: extension)
 
       begin
-        remote_file = URI.open(service_tile_url(service, tile))
+        remote_file = URI.open(service.tile_url(tile))
       rescue OpenURI::HTTPError => e
         return respond_with_message(
           :bad_gateway,
-          "#{service_name} service responded with #{e.message}"
+          "#{service.name} service responded with #{e.message}"
         )
       end
 
@@ -74,7 +61,7 @@ module Tileproxy
       end
 
       # Cache tile
-      tile_path = File.join(TILE_CACHE_PATH, service_name, tile.path)
+      tile_path = File.join(TILE_CACHE_PATH, service.name, tile.path)
       FileUtils.mkdir_p(File.dirname(tile_path))
       File.open(tile_path, 'wb') do |local_file|
         IO.copy_stream(remote_file, local_file)
@@ -85,26 +72,6 @@ module Tileproxy
       data = remote_file.read
 
       [status, { 'Content-Type' => remote_file.content_type }, [data]]
-    end
-
-    private def service_with_name(service_name)
-      SERVICES.fetch(service_name, {}).
-        transform_keys(&:to_sym).
-        transform_values do |value|
-          if value.respond_to?(:sample)
-            value.sample
-          else
-            value
-          end
-        end
-    end
-
-    private def service_tile_url(service, tile)
-      url_args = service.dup
-      url_fmt = url_args.fetch(:url).gsub(/%(?!{)/, '%%') # Escape %
-      url_args.delete(:url)
-      url_args.merge!(tile.params)
-      sprintf(url_fmt, url_args)
     end
 
     private def respond(status, content_type, data)
