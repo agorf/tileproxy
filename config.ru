@@ -116,7 +116,7 @@ class MapServer
     SERVICES.fetch(service_name, {}).
       transform_keys(&:to_sym).
       transform_values do |value|
-        if value.is_a?(Array)
+        if value.respond_to?(:sample)
           value.sample
         else
           value
