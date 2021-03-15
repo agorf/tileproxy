@@ -4,7 +4,7 @@ module Tileproxy
   module Middleware
     class ServiceValidator < BaseMiddleware
       def initialize(app, service_names)
-        @app = app
+        super(app)
         @service_names = service_names
       end
 

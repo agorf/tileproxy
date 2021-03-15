@@ -14,10 +14,6 @@ module Tileproxy
         \z
       }x.freeze
 
-      def initialize(app)
-        @app = app
-      end
-
       def call(env)
         match = env.fetch('PATH_INFO').match(PATH_REGEX)
 

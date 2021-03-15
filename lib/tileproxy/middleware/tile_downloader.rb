@@ -8,10 +8,6 @@ require_relative '../tile'
 module Tileproxy
   module Middleware
     class TileDownloader < BaseMiddleware
-      def initialize(app)
-        @app = app
-      end
-
       def call(env)
         service_name = env.fetch('tileproxy.service_name')
         service = Service.new(SERVICES.fetch(service_name))
