@@ -13,11 +13,14 @@ module Tileproxy
       end
 
       def call(env)
-        service_name = env.fetch('SERVICE_NAME')
+        service_name = env.fetch('tileproxy.service_name')
         service = Service.new(SERVICES.fetch(service_name))
 
-        x, y, z = env.values_at('PATH_X', 'PATH_Y', 'PATH_Z').map(&:to_i)
-        tile = Tile.new(x, y, z, extension: env.fetch('PATH_EXT'))
+        path = env.fetch('tileproxy.path')
+        x = path.fetch(:x).to_i
+        y = path.fetch(:y).to_i
+        z = path.fetch(:z).to_i
+        tile = Tile.new(x, y, z, extension: path.fetch(:ext))
 
         begin
           remote_file = URI.open(service.tile_url(tile))
@@ -37,7 +40,7 @@ module Tileproxy
           ]
         end
 
-        content_type = env.fetch('REQUEST_CONTENT_TYPE')
+        content_type = env.fetch('tileproxy.request_content_type')
 
         if remote_file.content_type != content_type
           return [

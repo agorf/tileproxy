@@ -10,7 +10,7 @@ module Tileproxy
       end
 
       def call(env)
-        service_name = env.fetch('PATH_SERVICE')
+        service_name = env.fetch('tileproxy.path').fetch(:service)
 
         if !SERVICES.key?(service_name)
           return [
@@ -20,7 +20,7 @@ module Tileproxy
           ]
         end
 
-        env['SERVICE_NAME'] = service_name
+        env['tileproxy.service_name'] = service_name
 
         @app.call(env)
       end

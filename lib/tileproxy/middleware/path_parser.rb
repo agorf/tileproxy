@@ -29,9 +29,8 @@ module Tileproxy
           ]
         end
 
-        match.names.map(&:upcase).zip(match.captures).each do |name, value|
-          env["PATH_#{name}"] = value
-        end
+        env['tileproxy.path'] =
+          match.names.map(&:to_sym).zip(match.captures).to_h
 
         @app.call(env)
       end
