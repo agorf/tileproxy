@@ -19,7 +19,7 @@ module Tileproxy
       end
 
       def call(env)
-        match = env.fetch('REQUEST_PATH').match(PATH_REGEX)
+        match = env.fetch('PATH_INFO').match(PATH_REGEX)
 
         if match.nil?
           return [
