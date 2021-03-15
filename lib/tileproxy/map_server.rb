@@ -7,7 +7,6 @@ require_relative 'tile'
 module Tileproxy
   class MapServer
     SERVICES = YAML.safe_load(open('services.yml')).freeze
-    TILE_CACHE_PATH = File.join(ENV.fetch('HOME'), '.cache', 'tileproxy')
 
     # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
     PATH_REGEX = %r{
@@ -49,8 +48,8 @@ module Tileproxy
         )
       end
 
-      extname = params[:ext].downcase
-      content_type = Rack::Mime::MIME_TYPES[extname]
+      extname = params[:ext]
+      content_type = Rack::Mime::MIME_TYPES[extname.downcase]
 
       if content_type.nil?
         return respond_with_message(
@@ -68,12 +67,6 @@ module Tileproxy
 
       xyz = params.values_at(:x, :y, :z).map(&:to_i)
       tile = Tileproxy::Tile.new(*xyz, extension: extname)
-      tile_path = File.join(TILE_CACHE_PATH, service_name, tile.path)
-
-      if File.exist?(tile_path)
-        data = File.open(tile_path).read
-        return respond(:ok, content_type, [data])
-      end
 
       begin
         remote_file = URI.open(service_tile_url(service, tile))
@@ -103,6 +96,7 @@ module Tileproxy
       end
 
       # Cache tile
+      tile_path = File.join(TILE_CACHE_PATH, service_name, tile.path)
       FileUtils.mkdir_p(File.dirname(tile_path))
       File.open(tile_path, 'wb') do |local_file|
         IO.copy_stream(remote_file, local_file)
