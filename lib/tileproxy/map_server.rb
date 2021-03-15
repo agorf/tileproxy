@@ -48,25 +48,25 @@ module Tileproxy
         )
       end
 
-      extname = params.fetch(:ext)
-      content_type = Rack::Mime::MIME_TYPES[extname.downcase]
+      extension = params.fetch(:ext)
+      content_type = Rack::Mime::MIME_TYPES[extension.downcase]
 
       if content_type.nil?
         return respond_with_message(
           :bad_request,
-          "Unknown Content-Type for requested file extension #{extname}"
+          "Unknown Content-Type for requested file extension #{extension}"
         )
       end
 
       if content_type.split('/', 2)[0] != 'image'
         return respond_with_message(
           :bad_request,
-          "Non-image Content-Type #{content_type} for requested file extension #{extname}"
+          "Non-image Content-Type #{content_type} for requested file extension #{extension}"
         )
       end
 
       xyz = params.values_at(:x, :y, :z).map(&:to_i)
-      tile = Tileproxy::Tile.new(*xyz, extension: extname)
+      tile = Tileproxy::Tile.new(*xyz, extension: extension)
 
       begin
         remote_file = URI.open(service_tile_url(service, tile))
