@@ -1,9 +1,6 @@
 module Tileproxy
   class Service
-    attr_reader :name
-
-    def initialize(name, config)
-      @name = name
+    def initialize(config)
       @config = sample_values(symbolize_keys(config))
     end
 
