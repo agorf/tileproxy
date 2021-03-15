@@ -68,7 +68,7 @@ module Tileproxy
 
       xyz = params.values_at(:x, :y, :z).map(&:to_i)
       tile = Tileproxy::Tile.new(*xyz, extension: extname)
-      tile_path = File.join(TILE_CACHE_PATH, tile.path)
+      tile_path = File.join(TILE_CACHE_PATH, service_name, tile.path)
 
       if File.exist?(tile_path)
         data = File.open(tile_path).read
