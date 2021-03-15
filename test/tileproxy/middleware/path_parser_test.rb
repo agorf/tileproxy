@@ -178,6 +178,18 @@ class PathParserTest < Minitest::Test
     )
   end
 
+  def test_extension_with_numerical_digits
+    res = @req.get('/openstreetmap/1/2/3.mp3')
+
+    assert_equal(200, res.status)
+    assert_equal('text/plain', res.headers['Content-Type'])
+    assert_equal('OK', res.body)
+    assert_equal(
+      { service: 'openstreetmap', z: '1', x: '2', y: '3', ext: '.mp3' },
+      @app.env['tileproxy.path']
+    )
+  end
+
   def test_more_digits
     res = @req.get('/openstreetmap/1234/2345/3456.png')
 
@@ -210,6 +222,42 @@ class PathParserTest < Minitest::Test
     assert_equal('OK', res.body)
     assert_equal(
       { service: 'open_street_map', z: '1', x: '2', y: '3', ext: '.png' },
+      @app.env['tileproxy.path']
+    )
+  end
+
+  def test_upper_case_service
+    res = @req.get('/OPENSTREETMAP/1/2/3.png')
+
+    assert_equal(200, res.status)
+    assert_equal('text/plain', res.headers['Content-Type'])
+    assert_equal('OK', res.body)
+    assert_equal(
+      { service: 'OPENSTREETMAP', z: '1', x: '2', y: '3', ext: '.png' },
+      @app.env['tileproxy.path']
+    )
+  end
+
+  def test_mixed_case_service
+    res = @req.get('/OpenStreetMap/1/2/3.png')
+
+    assert_equal(200, res.status)
+    assert_equal('text/plain', res.headers['Content-Type'])
+    assert_equal('OK', res.body)
+    assert_equal(
+      { service: 'OpenStreetMap', z: '1', x: '2', y: '3', ext: '.png' },
+      @app.env['tileproxy.path']
+    )
+  end
+
+  def test_service_with_numerical_digits
+    res = @req.get('/0p3nst233tm4p/1/2/3.png')
+
+    assert_equal(200, res.status)
+    assert_equal('text/plain', res.headers['Content-Type'])
+    assert_equal('OK', res.body)
+    assert_equal(
+      { service: '0p3nst233tm4p', z: '1', x: '2', y: '3', ext: '.png' },
       @app.env['tileproxy.path']
     )
   end
