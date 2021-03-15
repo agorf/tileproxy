@@ -1,5 +1,9 @@
 #!/usr/bin/env rackup
 
-require_relative 'lib/tileproxy'
+require 'yaml'
 
-run Tileproxy::App
+require_relative 'lib/tileproxy/app'
+
+services = YAML.safe_load(open('services.yml')).freeze
+
+run Tileproxy::App.new(services)

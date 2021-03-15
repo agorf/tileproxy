@@ -3,11 +3,11 @@ require 'test_helper'
 require 'tileproxy/middleware/service_validator'
 
 class ServiceValidatorTest < Minitest::Test
-  SERVICE_NAMES = %w[openstreetmap bing_aerial].freeze
-
   def setup
+    services = { 'openstreetmap' => {}, 'bing_aerial' => {} }.freeze
+
     @app = MockApp.new
-    subject = Tileproxy::Middleware::ServiceValidator.new(@app, SERVICE_NAMES)
+    subject = Tileproxy::Middleware::ServiceValidator.new(@app, services: services)
     subject = Rack::Lint.new(subject)
     @req = Rack::MockRequest.new(subject)
   end

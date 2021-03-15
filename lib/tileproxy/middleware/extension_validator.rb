@@ -5,6 +5,10 @@ require_relative 'base_middleware'
 module Tileproxy
   module Middleware
     class ExtensionValidator < BaseMiddleware
+      def initialize(app)
+        @app = app
+      end
+
       def call(env)
         extension = env.fetch('tileproxy.path').fetch(:ext)
         content_type = Rack::Mime::MIME_TYPES[extension.downcase]
