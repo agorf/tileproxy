@@ -4,8 +4,9 @@ require 'tileproxy/middleware/extension_validator'
 
 class ExtensionValidatorTest < Minitest::Test
   def setup
-    @app = MockApp.new # TODO: Rack::Lint
+    @app = MockApp.new
     subject = Tileproxy::Middleware::ExtensionValidator.new(@app)
+    subject = Rack::Lint.new(subject)
     @req = Rack::MockRequest.new(subject)
   end
 
