@@ -11,8 +11,8 @@ class ExtensionValidatorTest < Minitest::Test
   end
 
   def test_unknown_content_type
-    opts = { 'tileproxy.path' => { ext: '.foo' } }
-    res = @req.get('/openstreetmap/1/2/3.foo', opts)
+    @ext = '.foo'
+    res = make_request
 
     assert_equal(400, res.status)
     assert_equal('text/plain', res.headers['Content-Type'])
@@ -23,8 +23,8 @@ class ExtensionValidatorTest < Minitest::Test
   end
 
   def test_non_image_content_type
-    opts = { 'tileproxy.path' => { ext: '.mp3' } }
-    res = @req.get('/openstreetmap/1/2/3.foo', opts)
+    @ext = '.mp3'
+    res = make_request
 
     assert_equal(400, res.status)
     assert_equal('text/plain', res.headers['Content-Type'])
@@ -35,12 +35,17 @@ class ExtensionValidatorTest < Minitest::Test
   end
 
   def test_image_content_type
-    opts = { 'tileproxy.path' => { ext: '.png' } }
-    res = @req.get('/openstreetmap/1/2/3.foo', opts)
+    @ext = '.png'
+    res = make_request
 
     assert_equal(200, res.status)
     assert_equal('text/plain', res.headers['Content-Type'])
     assert_equal('OK', res.body)
     assert_equal('image/png', @app.env['tileproxy.request_content_type'])
+  end
+
+  private def make_request
+    opts = { 'tileproxy.path' => { ext: @ext } }
+    res = @req.get("/openstreetmap/1/2/3#{@ext}", opts)
   end
 end
