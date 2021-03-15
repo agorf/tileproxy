@@ -14,7 +14,7 @@ module Tileproxy
     use Rack::Static, urls: ['/'], root: TILE_CACHE_PATH, cascade: true
 
     use Tileproxy::Middleware::PathParser
-    use Tileproxy::Middleware::ServiceValidator
+    use Tileproxy::Middleware::ServiceValidator, SERVICES.keys
     use Tileproxy::Middleware::ExtensionValidator
     use Tileproxy::Middleware::TileDownloader
 
