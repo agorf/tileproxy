@@ -10,8 +10,15 @@ module Tileproxy
     TILE_CACHE_PATH = File.join(ENV.fetch('HOME'), '.cache', 'tileproxy')
 
     # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-    PATH_REGEX =
-      %r{\A/+(?<service>\w+)/+(?<z>\d+)/+(?<x>\d+)/+(?<y>\d+)\.\w+\z}.freeze
+    PATH_REGEX = %r{
+      \A
+      /+(?<service>\w+)
+      /+(?<z>\d+)
+      /+(?<x>\d+)
+      /+(?<y>\d+)
+      \.\w+
+      \z
+    }x.freeze
 
     HTTP_STATUS = {
       ok: 200,
