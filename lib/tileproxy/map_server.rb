@@ -16,7 +16,7 @@ module Tileproxy
       /+(?<z>\d+)
       /+(?<x>\d+)
       /+(?<y>\d+)
-      \.\w+
+      \.[A-Za-z]+
       \z
     }x.freeze
 
