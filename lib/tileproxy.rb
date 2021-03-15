@@ -11,13 +11,15 @@ module Tileproxy
   TILE_CACHE_PATH = File.join(ENV.fetch('HOME'), '.cache', 'tileproxy')
 
   App = Rack::Builder.new do
-    use Rack::Static, urls: ['/'], root: TILE_CACHE_PATH, cascade: true
+    urls = SERVICES.keys.map { |name| "/#{name}/" }
+
+    use Rack::Static, urls: urls, root: TILE_CACHE_PATH, cascade: true
 
     use Tileproxy::Middleware::PathParser
     use Tileproxy::Middleware::ServiceValidator, SERVICES.keys
     use Tileproxy::Middleware::ExtensionValidator
     use Tileproxy::Middleware::TileDownloader
 
-    run Rack::Static.new(nil, urls: ['/'], root: TILE_CACHE_PATH)
+    run Rack::Static.new(nil, urls: urls, root: TILE_CACHE_PATH)
   end
 end
