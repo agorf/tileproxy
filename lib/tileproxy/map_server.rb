@@ -49,7 +49,7 @@ module Tileproxy
         )
       end
 
-      extname = File.extname(req.path)
+      extname = File.extname(req.path).downcase
       content_type = Rack::Mime::MIME_TYPES[extname]
 
       if content_type.nil?
