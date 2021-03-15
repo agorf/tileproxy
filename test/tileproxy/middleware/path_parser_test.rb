@@ -191,13 +191,13 @@ class PathParserTest < Minitest::Test
   end
 
   def test_more_digits
-    res = @req.get('/openstreetmap/1234/2345/3456.png')
+    res = @req.get('/openstreetmap/12/2345/3456.png')
 
     assert_equal(200, res.status)
     assert_equal('text/plain', res.headers['Content-Type'])
     assert_equal('OK', res.body)
     assert_equal(
-      { service: 'openstreetmap', z: '1234', x: '2345', y: '3456', ext: '.png' },
+      { service: 'openstreetmap', z: '12', x: '2345', y: '3456', ext: '.png' },
       @app.env['tileproxy.path']
     )
   end
