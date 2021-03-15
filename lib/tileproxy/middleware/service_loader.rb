@@ -1,3 +1,4 @@
+require 'rack/utils'
 require 'yaml'
 
 require_relative '../service'
