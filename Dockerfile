@@ -1,7 +1,5 @@
 FROM ruby:2.6-alpine
 
-LABEL maintainer="me@agorf.gr"
-
 RUN apk update && apk add \
       build-base
 
