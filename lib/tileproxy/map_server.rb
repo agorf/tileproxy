@@ -48,7 +48,7 @@ module Tileproxy
         )
       end
 
-      extname = params[:ext]
+      extname = params.fetch(:ext)
       content_type = Rack::Mime::MIME_TYPES[extname.downcase]
 
       if content_type.nil?
