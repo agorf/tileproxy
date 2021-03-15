@@ -35,7 +35,9 @@ class MapServer
       )
     end
 
-    @params = Hash[match.names.map(&:to_sym).zip(match.captures)]
+    params = Hash[match.names.map(&:to_sym).zip(match.captures)]
+    service_name = params.fetch(:service)
+    service = service_with_name(service_name)
 
     if service.empty?
       return respond_with_message(
@@ -71,7 +73,7 @@ class MapServer
     end
 
     begin
-      remote_file = URI.open(tile_url(tile))
+      remote_file = URI.open(service_tile_url(service, tile))
     rescue OpenURI::HTTPError => e
       return respond_with_message(
         :bad_gateway,
@@ -110,11 +112,7 @@ class MapServer
     [status, { 'Content-Type' => remote_file.content_type }, [data]]
   end
 
-  private def service_name
-    params.fetch(:service)
-  end
-
-  private def service
+  private def service_with_name(service_name)
     SERVICES.fetch(service_name, {}).
       transform_keys(&:to_sym).
       transform_values do |value|
@@ -126,19 +124,12 @@ class MapServer
       end
   end
 
-  private def tile_url(tile)
-    args = service.dup
-    format = args.delete(:url).gsub(/%(?!{)/, '%%') # Escape %
-
-    args.merge!(
-      x: tile.x,
-      y: tile.y,
-      z: tile.z,
-      bbox: tile.bbox_str,
-      quadkey: tile.quadkey
-    )
-
-    sprintf(format, args)
+  private def service_tile_url(service, tile)
+    url_args = service.dup
+    url_fmt = url_args.fetch(:url).gsub(/%(?!{)/, '%%') # Escape %
+    url_args.delete(:url)
+    url_args.merge!(tile.params)
+    sprintf(url_fmt, url_args)
   end
 
   private def respond(status, content_type, data)
