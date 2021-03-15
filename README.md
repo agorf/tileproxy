@@ -1,10 +1,8 @@
 # tileproxy
 
-A minimal [slippy map tile][slippy] [Rack][]-based HTTP caching proxy and
-demultiplexer.
+A minimal [slippy map tile][slippy] HTTP caching proxy and demultiplexer.
 
 [slippy]: http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-[Rack]: https://github.com/rack/rack
 
 ## Rationale
 
