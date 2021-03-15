@@ -29,8 +29,6 @@ module Tileproxy
           ]
         end
 
-        content_type = env.fetch('REQUEST_CONTENT_TYPE')
-
         if remote_file.content_type.to_s.split('/', 2)[0] != 'image'
           return [
             Rack::Utils.status_code(:bad_gateway),
@@ -38,6 +36,8 @@ module Tileproxy
             ["Remote file Content-Type #{remote_file.content_type} is not an image"]
           ]
         end
+
+        content_type = env.fetch('REQUEST_CONTENT_TYPE')
 
         if remote_file.content_type != content_type
           return [
