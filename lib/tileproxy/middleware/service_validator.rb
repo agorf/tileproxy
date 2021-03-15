@@ -1,7 +1,5 @@
 require 'rack/utils'
 
-require_relative '../service'
-
 module Tileproxy
   module Middleware
     class ServiceValidator
