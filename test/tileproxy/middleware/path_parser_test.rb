@@ -65,6 +65,17 @@ class PathParserTest < Minitest::Test
     )
   end
 
+  def test_too_big_z
+    res = @req.get('/openstreetmap/19/2/3.png')
+
+    assert_equal(400, res.status)
+    assert_equal('text/plain', res.headers['Content-Type'])
+    assert_equal(
+      'Invalid zoom "19" in request path. Valid zoom: 0-18',
+      res.body
+    )
+  end
+
   def test_missing_x
     res = @req.get('/openstreetmap/1/3.png')
 

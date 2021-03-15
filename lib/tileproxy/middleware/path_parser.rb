@@ -29,8 +29,18 @@ module Tileproxy
           ]
         end
 
-        env['tileproxy.path'] =
-          match.names.map(&:to_sym).zip(match.captures).to_h
+        path = match.names.map(&:to_sym).zip(match.captures).to_h
+        zoom = path[:z].to_i
+
+        if zoom > 18
+          return [
+            Rack::Utils.status_code(:bad_request),
+            { 'Content-Type' => 'text/plain' },
+            [%(Invalid zoom "#{zoom}" in request path. Valid zoom: 0-18)]
+          ]
+        end
+
+        env['tileproxy.path'] = path
 
         @app.call(env)
       end
