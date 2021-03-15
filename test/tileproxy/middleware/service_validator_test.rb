@@ -15,7 +15,7 @@ class ServiceValidatorTest < Minitest::Test
   def test_unavailable_service
     res = make_request('google_satellite')
 
-    assert_equal(404, res.status)
+    assert res.not_found?
     assert_equal('text/plain', res.headers['Content-Type'])
     assert_equal(
       'Service "google_satellite" not found. Available services: bing_aerial, openstreetmap',
@@ -26,7 +26,7 @@ class ServiceValidatorTest < Minitest::Test
   def test_available_service
     res = make_request('openstreetmap')
 
-    assert_equal(200, res.status)
+    assert res.ok?
     assert_equal('text/plain', res.headers['Content-Type'])
     assert_equal('OK', res.body)
     assert_equal('openstreetmap', @app.env['tileproxy.service_name'])

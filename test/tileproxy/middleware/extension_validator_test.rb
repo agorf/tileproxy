@@ -13,7 +13,7 @@ class ExtensionValidatorTest < Minitest::Test
   def test_unknown_content_type
     res = make_request('.foo')
 
-    assert_equal(400, res.status)
+    assert res.bad_request?
     assert_equal('text/plain', res.headers['Content-Type'])
     assert_equal(
       'Unknown Content-Type for requested file extension .foo',
@@ -24,7 +24,7 @@ class ExtensionValidatorTest < Minitest::Test
   def test_non_image_content_type
     res = make_request('.mp3')
 
-    assert_equal(400, res.status)
+    assert res.bad_request?
     assert_equal('text/plain', res.headers['Content-Type'])
     assert_equal(
       'Non-image Content-Type audio/mpeg for requested file extension .mp3',
@@ -35,7 +35,7 @@ class ExtensionValidatorTest < Minitest::Test
   def test_image_content_type
     res = make_request('.png')
 
-    assert_equal(200, res.status)
+    assert res.ok?
     assert_equal('text/plain', res.headers['Content-Type'])
     assert_equal('OK', res.body)
     assert_equal('image/png', @app.env['tileproxy.request_content_type'])
