@@ -1,7 +1,7 @@
 require 'rack'
 require 'yaml'
 
-require_relative 'tileproxy/middleware/path_parser'
+require_relative 'tileproxy/middleware/path_validator'
 require_relative 'tileproxy/middleware/service_validator'
 require_relative 'tileproxy/middleware/extension_validator'
 require_relative 'tileproxy/middleware/tile_downloader'
@@ -15,7 +15,7 @@ module Tileproxy
 
     use Rack::Static, urls: urls, root: TILE_CACHE_PATH, cascade: true
 
-    use Tileproxy::Middleware::PathParser
+    use Tileproxy::Middleware::PathValidator
     use Tileproxy::Middleware::ServiceValidator, SERVICES.keys
     use Tileproxy::Middleware::ExtensionValidator
     use Tileproxy::Middleware::TileDownloader

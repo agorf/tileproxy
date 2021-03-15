@@ -2,7 +2,7 @@ require_relative 'base_middleware'
 
 module Tileproxy
   module Middleware
-    class PathParser < BaseMiddleware
+    class PathValidator < BaseMiddleware
       # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
       PATH_REGEX = %r{
         \A

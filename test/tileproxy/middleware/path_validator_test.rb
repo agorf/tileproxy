@@ -1,11 +1,11 @@
 require 'test_helper'
 
-require 'tileproxy/middleware/path_parser'
+require 'tileproxy/middleware/path_validator'
 
-class PathParserTest < Minitest::Test
+class PathValidatorTest < Minitest::Test
   def setup
     @app = MockApp.new
-    subject = Tileproxy::Middleware::PathParser.new(@app)
+    subject = Tileproxy::Middleware::PathValidator.new(@app)
     subject = Rack::Lint.new(subject)
     @req = Rack::MockRequest.new(subject)
   end
