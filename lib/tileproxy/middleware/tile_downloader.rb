@@ -1,13 +1,13 @@
 require 'fileutils'
 require 'open-uri'
-require 'rack/utils'
 
+require_relative 'base_middleware'
 require_relative '../service'
 require_relative '../tile'
 
 module Tileproxy
   module Middleware
-    class TileDownloader
+    class TileDownloader < BaseMiddleware
       def initialize(app)
         @app = app
       end
@@ -25,37 +25,30 @@ module Tileproxy
         begin
           remote_file = URI.open(service.tile_url(tile))
         rescue OpenURI::HTTPError => e
-          return [
-            Rack::Utils.status_code(:bad_gateway),
-            { 'Content-Type' => 'text/plain' },
-            ["#{service_name} service responded with #{e.message}"]
-          ]
+          return http_error(
+            :bad_gateway,
+            "#{service_name} service responded with #{e.message}"
+          )
         end
 
         if remote_file.content_type.to_s.split('/', 2)[0] != 'image'
-          return [
-            Rack::Utils.status_code(:bad_gateway),
-            { 'Content-Type' => 'text/plain' },
-            ["Remote file Content-Type #{remote_file.content_type} is not an image"]
-          ]
+          return http_error(
+            :bad_gateway,
+            "Remote file Content-Type #{remote_file.content_type} is not an image"
+          )
         end
 
         content_type = env.fetch('tileproxy.request_content_type')
 
         if remote_file.content_type != content_type
-          return [
-            Rack::Utils.status_code(:bad_request),
-            { 'Content-Type' => 'text/plain' },
-            ["Remote file Content-Type #{remote_file.content_type} is not #{content_type}"]
-          ]
+          return http_error(
+            :bad_request,
+            "Remote file Content-Type #{remote_file.content_type} is not #{content_type}"
+          )
         end
 
         if remote_file.size == 0
-          return [
-            Rack::Utils.status_code(:bad_gateway),
-            { 'Content-Type' => 'text/plain' },
-            ['Remote file is empty']
-          ]
+          return http_error(:bad_gateway, 'Remote file is empty')
         end
 
         # Cache tile

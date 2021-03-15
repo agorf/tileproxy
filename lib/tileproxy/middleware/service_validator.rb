@@ -1,8 +1,8 @@
-require 'rack/utils'
+require_relative 'base_middleware'
 
 module Tileproxy
   module Middleware
-    class ServiceValidator
+    class ServiceValidator < BaseMiddleware
       def initialize(app, service_names)
         @app = app
         @service_names = service_names
@@ -12,11 +12,10 @@ module Tileproxy
         service_name = env.fetch('tileproxy.path').fetch(:service)
 
         if !@service_names.include?(service_name)
-          return [
-            Rack::Utils.status_code(:not_found),
-            { 'Content-Type' => 'text/plain' },
-            [%(Service "#{service_name}" not found. Available services: #{@service_names.sort.join(', ')})]
-          ]
+          return http_error(
+            :not_found,
+            %(Service "#{service_name}" not found. Available services: #{@service_names.sort.join(', ')})
+          )
         end
 
         env['tileproxy.service_name'] = service_name
