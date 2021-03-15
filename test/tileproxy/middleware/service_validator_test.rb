@@ -1,0 +1,39 @@
+require 'test_helper'
+
+require 'tileproxy/middleware/service_validator'
+
+class ServiceValidatorTest < Minitest::Test
+  SERVICE_NAMES = %w[openstreetmap bing_aerial].freeze
+
+  def setup
+    @app = MockApp.new
+    subject = Tileproxy::Middleware::ServiceValidator.new(@app, SERVICE_NAMES)
+    subject = Rack::Lint.new(subject)
+    @req = Rack::MockRequest.new(subject)
+  end
+
+  def test_unavailable_service
+    res = make_request('google_satellite')
+
+    assert_equal(404, res.status)
+    assert_equal('text/plain', res.headers['Content-Type'])
+    assert_equal(
+      'Service "google_satellite" not found. Available services: bing_aerial, openstreetmap',
+      res.body
+    )
+  end
+
+  def test_available_service
+    res = make_request('openstreetmap')
+
+    assert_equal(200, res.status)
+    assert_equal('text/plain', res.headers['Content-Type'])
+    assert_equal('OK', res.body)
+    assert_equal('openstreetmap', @app.env['tileproxy.service_name'])
+  end
+
+  private def make_request(service)
+    opts = { 'tileproxy.path' => { service: service } }
+    res = @req.get("/#{service}/1/2/3.png", opts)
+  end
+end
