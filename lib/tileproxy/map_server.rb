@@ -8,17 +8,6 @@ module Tileproxy
   class MapServer
     SERVICES = YAML.safe_load(open('services.yml')).freeze
 
-    # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-    PATH_REGEX = %r{
-      \A
-      /+(?<service>\w+)
-      /+(?<z>\d+)
-      /+(?<x>\d+)
-      /+(?<y>\d+)
-      (?<ext>\.[A-Za-z]+)
-      \z
-    }x.freeze
-
     HTTP_STATUS = {
       ok: 200,
       bad_request: 400,
@@ -26,19 +15,8 @@ module Tileproxy
       bad_gateway: 502
     }.freeze
 
-    def call(env)
-      req = Rack::Request.new(env)
-      match = req.path.match(PATH_REGEX)
-
-      if match.nil?
-        return respond_with_message(
-          :bad_request,
-          'Invalid request path. Valid format: /service/z/x/y.ext'
-        )
-      end
-
-      params = Hash[match.names.map(&:to_sym).zip(match.captures)]
-      service_name = params.fetch(:service)
+    def call(path)
+      service_name = path.fetch(:service)
       service = service_with_name(service_name)
 
       if service.empty?
@@ -48,7 +26,7 @@ module Tileproxy
         )
       end
 
-      extension = params.fetch(:ext)
+      extension = path.fetch(:ext)
       content_type = Rack::Mime::MIME_TYPES[extension.downcase]
 
       if content_type.nil?
@@ -65,7 +43,7 @@ module Tileproxy
         )
       end
 
-      xyz = params.values_at(:x, :y, :z).map(&:to_i)
+      xyz = path.values_at(:x, :y, :z).map(&:to_i)
       tile = Tileproxy::Tile.new(*xyz, extension: extension)
 
       begin

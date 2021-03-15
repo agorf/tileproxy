@@ -1,6 +1,7 @@
 require 'rack'
 
 require_relative 'lib/tileproxy'
+require_relative 'lib/tileproxy/middleware/path_parser'
 require_relative 'lib/tileproxy/map_server'
 
 use(
@@ -11,5 +12,7 @@ use(
 )
 
 use Rack::ContentLength
+
+use Tileproxy::Middleware::PathParser
 
 run Tileproxy::MapServer.new
