@@ -30,8 +30,11 @@ module Tileproxy
           ]
         end
 
-        path = Hash[match.names.map(&:to_sym).zip(match.captures)]
-        @app.call(path)
+        match.names.map(&:upcase).zip(match.captures).each do |name, value|
+          env["PATH_#{name}"] = value
+        end
+
+        @app.call(env)
       end
     end
   end

@@ -2,7 +2,7 @@ require 'rack'
 
 require_relative 'lib/tileproxy'
 require_relative 'lib/tileproxy/middleware/path_parser'
-require_relative 'lib/tileproxy/middleware/service_loader'
+require_relative 'lib/tileproxy/middleware/service_validator'
 require_relative 'lib/tileproxy/middleware/extension_validator'
 require_relative 'lib/tileproxy/map_server'
 
@@ -17,7 +17,7 @@ use Rack::ContentLength
 
 use Tileproxy::Middleware::PathParser
 
-use Tileproxy::Middleware::ServiceLoader
+use Tileproxy::Middleware::ServiceValidator
 
 use Tileproxy::Middleware::ExtensionValidator
 

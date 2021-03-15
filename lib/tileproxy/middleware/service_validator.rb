@@ -1,19 +1,16 @@
 require 'rack/utils'
-require 'yaml'
 
 require_relative '../service'
 
 module Tileproxy
   module Middleware
-    class ServiceLoader
-      SERVICES = YAML.safe_load(open('services.yml')).freeze
-
+    class ServiceValidator
       def initialize(app)
         @app = app
       end
 
-      def call(path)
-        service_name = path.fetch(:service)
+      def call(env)
+        service_name = env.fetch('PATH_SERVICE')
 
         if !SERVICES.key?(service_name)
           return [
@@ -23,9 +20,9 @@ module Tileproxy
           ]
         end
 
-        service_config = SERVICES.fetch(service_name)
-        service = Service.new(service_name, service_config)
-        @app.call(path, service)
+        env['SERVICE_NAME'] = service_name
+
+        @app.call(env)
       end
     end
   end

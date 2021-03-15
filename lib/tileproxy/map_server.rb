@@ -12,9 +12,11 @@ module Tileproxy
       bad_gateway: 502
     }.freeze
 
-    def call(path, service)
-      xyz = path.values_at(:x, :y, :z).map(&:to_i)
-      tile = Tileproxy::Tile.new(*xyz, extension: path.fetch(:ext))
+    def call(env)
+      service = fetch_service(env)
+
+      x, y, z = env.values_at('PATH_X', 'PATH_Y', 'PATH_Z').map(&:to_i)
+      tile = Tileproxy::Tile.new(x, y, z, extension: env.fetch('PATH_EXT'))
 
       begin
         remote_file = URI.open(service.tile_url(tile))
@@ -24,6 +26,8 @@ module Tileproxy
           "#{service.name} service responded with #{e.message}"
         )
       end
+
+      content_type = env.fetch('REQUEST_CONTENT_TYPE')
 
       if remote_file.content_type.to_s.split('/', 2)[0] != 'image'
         return respond_with_message(
@@ -55,6 +59,12 @@ module Tileproxy
       data = remote_file.read
 
       [status, { 'Content-Type' => remote_file.content_type }, [data]]
+    end
+
+    private def fetch_service(env)
+      service_name = env.fetch('SERVICE_NAME')
+      service_config = SERVICES.fetch(service_name)
+      Service.new(service_name, service_config)
     end
 
     private def respond(status, content_type, data)

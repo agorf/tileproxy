@@ -8,8 +8,8 @@ module Tileproxy
         @app = app
       end
 
-      def call(path, service)
-        extension = path.fetch(:ext)
+      def call(env)
+        extension = env.fetch('PATH_EXT')
         content_type = Rack::Mime::MIME_TYPES[extension.downcase]
 
         if content_type.nil?
@@ -28,7 +28,9 @@ module Tileproxy
           ]
         end
 
-        @app.call(path, service)
+        env['REQUEST_CONTENT_TYPE'] = content_type
+
+        @app.call(env)
       end
     end
   end
