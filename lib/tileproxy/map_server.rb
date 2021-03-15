@@ -20,8 +20,6 @@ module Tileproxy
       bad_gateway: 502
     }.freeze
 
-    attr_reader :params
-
     def call(env)
       req = Rack::Request.new(env)
       match = req.path.match(PATH_REGEX)
