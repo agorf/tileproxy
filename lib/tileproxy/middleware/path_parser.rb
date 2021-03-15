@@ -19,8 +19,7 @@ module Tileproxy
       end
 
       def call(env)
-        req = Rack::Request.new(env)
-        match = req.path.match(PATH_REGEX)
+        match = env.fetch('REQUEST_PATH').match(PATH_REGEX)
 
         if match.nil?
           return [
