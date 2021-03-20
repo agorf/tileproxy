@@ -40,12 +40,12 @@ module Tileproxy
     end
 
     private def spherical_mercator_bbox
-      top, left = top_left_lng_lat.spherical_mercator
-      bottom, right = bottom_right_lng_lat.spherical_mercator
+      left, top = left_top_lng_lat.spherical_mercator
+      right, bottom = right_bottom_lng_lat.spherical_mercator
       [left, bottom, right, top]
     end
 
-    protected def top_left_lng_lat
+    protected def left_top_lng_lat
       n = 2**z
       lng_deg = x / n.to_f * 360.0 - 180
       lat_rad = Math.atan(Math.sinh(Math::PI * (1 - 2 * y / n.to_f)))
@@ -53,11 +53,11 @@ module Tileproxy
       LngLat.new(lng_deg, lat_deg)
     end
 
-    private def bottom_right_lng_lat
-      bottom_right.top_left_lng_lat
+    private def right_bottom_lng_lat
+      right_bottom.left_top_lng_lat
     end
 
-    private def bottom_right
+    private def right_bottom
       Tile.new(x + 1, y + 1, z, extension: extension)
     end
   end

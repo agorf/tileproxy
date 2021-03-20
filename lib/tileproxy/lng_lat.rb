@@ -7,7 +7,7 @@ module Tileproxy
       lat_rad = lat * (Math::PI / 180.0)
       x = EQUATORIAL_RADIUS * lng_rad
       y = EQUATORIAL_RADIUS * Math.log(Math.tan((Math::PI * 0.25) + (0.5 * lat_rad)))
-      [y, x]
+      [x, y]
     end
   end
 end
