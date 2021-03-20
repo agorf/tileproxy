@@ -6,18 +6,31 @@ require_relative 'middleware/path_validator'
 
 module Tileproxy
   class App
-    def initialize(services)
+    def initialize(services:, tile_cache_path:)
       @services = services
+      @tile_cache_path = tile_cache_path
     end
 
     def call(env)
       # Order is last to first
-      app = Middleware::Static.new(services: @services)
-      app = Middleware::TileDownloader.new(app, services: @services)
+      app = Middleware::Static.new(
+        services: @services,
+        tile_cache_path: @tile_cache_path
+      )
+      app = Middleware::TileDownloader.new(
+        app,
+        services: @services,
+        tile_cache_path: @tile_cache_path
+      )
       app = Middleware::ExtensionValidator.new(app)
       app = Middleware::ServiceValidator.new(app, services: @services)
       app = Middleware::PathValidator.new(app)
-      app = Middleware::Static.new(app, services: @services, cascade: true)
+      app = Middleware::Static.new(
+        app,
+        services: @services,
+        tile_cache_path: @tile_cache_path,
+        cascade: true
+      )
       app.call(env)
     end
   end

@@ -8,9 +8,10 @@ require_relative '../tile'
 module Tileproxy
   module Middleware
     class TileDownloader < BaseMiddleware
-      def initialize(app, services:)
+      def initialize(app, services:, tile_cache_path:)
         @app = app
         @services = services
+        @tile_cache_path = tile_cache_path
       end
 
       def call(env)
@@ -53,7 +54,7 @@ module Tileproxy
         end
 
         # Cache tile
-        tile_path = File.join(TILE_CACHE_PATH, service_name, tile.path)
+        tile_path = File.join(@tile_cache_path, service_name, tile.path)
         FileUtils.mkdir_p(File.dirname(tile_path))
         File.open(tile_path, 'wb') do |local_file|
           IO.copy_stream(remote_file, local_file)
