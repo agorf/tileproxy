@@ -19,6 +19,7 @@ class ExtensionValidatorTest < Minitest::Test
       'Unknown Content-Type for requested file extension .foo',
       res.body
     )
+    assert_nil @app.env['tileproxy.request_content_type']
   end
 
   def test_non_image_content_type
@@ -30,6 +31,7 @@ class ExtensionValidatorTest < Minitest::Test
       'Non-image Content-Type audio/mpeg for requested file extension .mp3',
       res.body
     )
+    assert_nil @app.env['tileproxy.request_content_type']
   end
 
   def test_image_content_type

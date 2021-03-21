@@ -19,6 +19,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_missing_service
@@ -30,6 +31,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_invalid_service
@@ -41,6 +43,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_missing_z
@@ -52,6 +55,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_invalid_z
@@ -63,6 +67,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_too_big_z
@@ -74,6 +79,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid zoom "19" in request path. Valid zoom: 0-18',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_missing_x
@@ -85,6 +91,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_invalid_x
@@ -96,6 +103,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_missing_y
@@ -107,6 +115,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_invalid_y
@@ -118,6 +127,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_missing_extension
@@ -129,6 +139,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_blank_extension
@@ -140,6 +151,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_invalid_extension
@@ -151,6 +163,7 @@ class PathValidatorTest < Minitest::Test
       'Invalid request path. Valid format: /service/z/x/y.ext',
       res.body
     )
+    assert_nil @app.env['tileproxy.path']
   end
 
   def test_upper_case_extension

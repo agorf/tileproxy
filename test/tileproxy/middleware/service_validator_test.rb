@@ -21,6 +21,7 @@ class ServiceValidatorTest < Minitest::Test
       'Service "google_satellite" not found. Available services: bing_aerial, openstreetmap',
       res.body
     )
+    assert_nil @app.env['tileproxy.service_name']
   end
 
   def test_available_service
