@@ -34,23 +34,25 @@ request path.
 This program is configured with a `services.yml` file that must be present in
 the same directory as `config.ru`
 
-`services.yml` is a YAML file which contains a mapping with service names as
-keys and additional mappings as values. Service names may be composed of
-lowercase and uppercase letters, numbers and underscore characters.
+`services.yml` is a [YAML][] file which maps service names to their
+configurations.
 
-Each service mapping value must contain a `url` key with a string value. The
-following placeholders are supported:
+Service names may contain lowercase and uppercase letters, numbers and
+underscore characters.
+
+Service configurations must contain a `url`. The following `url` placeholders
+are supported:
 
 * `%{z}` is replaced with the requested zoom (or precision)
-* `%{x}` is replaced with the requested x tile
-* `%{y}` is replaced with the requested y tile
+* `%{x}` is replaced with the x value (column) of the requested tile
+* `%{y}` is replaced with the y value (row) of the requested tile
 * `%{bbox}` is replaced with the [Spherical Mercator][mercator] bounding box of
-  the zoom, x and y tiles, used in [WMS][]
-* `%{quadkey}` is replaced with the [quadkey][]-encoded value of the zoom, x and
-  y tiles
+  the requested zoom, x and y values
+* `%{quadkey}` is replaced with the [quadkey][] of the requested zoom, x and
+  y values
 
-Any other placeholder not in the above list is replaced by key-value pairs that
-must be present in the mapping value of the service. For example:
+Any other placeholder is replaced by key-value pairs that must be present in the
+mapping value of the service. For example:
 
 ~~~ yaml
 mymapservice:
@@ -67,15 +69,15 @@ openstreetmap:
   server: ['a', 'b', 'c']
 ~~~
 
-To start off, copy the sample services YAML file to `services.yml` and
-customize it:
+To start off, copy the sample services YAML file to `services.yml` and customize
+it:
 
 ~~~ sh
 $ cp services.yml.sample services.yml
 ~~~
 
+[YAML]: https://en.wikipedia.org/wiki/YAML
 [mercator]: https://en.wikipedia.org/wiki/Web_Mercator_projection
-[WMS]: https://en.wikipedia.org/wiki/Web_Map_Service
 [quadkey]: https://msdn.microsoft.com/en-us/library/bb259689.aspx
 
 ## Installation
