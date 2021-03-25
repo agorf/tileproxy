@@ -41,8 +41,8 @@ configurations.
 Service names may contain lowercase and uppercase letters, numbers and
 underscore characters.
 
-Service configurations must contain a `url`. The following `url` placeholders
-are supported:
+Service configurations must contain a `url` with the following supported
+placeholders:
 
 * `%{z}` is replaced with the requested zoom (precision)
 * `%{x}` is replaced with the x value (column) of the requested tile
