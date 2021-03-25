@@ -84,6 +84,7 @@ $ cp services.yml.sample services.yml
 ~~~
 
 [YAML]: https://en.wikipedia.org/wiki/YAML
+[wgs84]: https://en.wikipedia.org/wiki/World_Geodetic_System
 [mercator]: https://en.wikipedia.org/wiki/Web_Mercator_projection
 [quadkey]: https://msdn.microsoft.com/en-us/library/bb259689.aspx
 
