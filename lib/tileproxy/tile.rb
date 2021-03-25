@@ -26,7 +26,7 @@ module Tileproxy
     end
 
     def bbox_str
-      sprintf('%.9f,%.9f,%.9f,%.9f', *spherical_mercator_bbox)
+      sprintf('%.9f,%.9f,%.9f,%.9f', *web_mercator_bbox)
     end
 
     def params
@@ -39,9 +39,9 @@ module Tileproxy
       }
     end
 
-    private def spherical_mercator_bbox
-      left, top = left_top_lng_lat.spherical_mercator
-      right, bottom = right_bottom_lng_lat.spherical_mercator
+    private def web_mercator_bbox
+      left, top = left_top_lng_lat.web_mercator
+      right, bottom = right_bottom_lng_lat.web_mercator
       [left, bottom, right, top]
     end
 

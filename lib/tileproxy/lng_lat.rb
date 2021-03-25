@@ -2,7 +2,7 @@ module Tileproxy
   EQUATORIAL_RADIUS = 6378137 # meters (WGS 84)
 
   LngLat = Struct.new(:lng, :lat) do
-    def spherical_mercator
+    def web_mercator
       lng_rad = lng * (Math::PI / 180.0)
       lat_rad = lat * (Math::PI / 180.0)
       x = EQUATORIAL_RADIUS * lng_rad

@@ -47,8 +47,8 @@ placeholders:
 * `%{z}` is replaced with the requested zoom (precision)
 * `%{x}` is replaced with the x value (column) of the requested tile
 * `%{y}` is replaced with the y value (row) of the requested tile
-* `%{bbox}` is replaced with the [Spherical Mercator][mercator] bounding box of
-  the requested zoom, x and y values
+* `%{bbox}` is replaced with the [Web Mercator][mercator] bounding box of the
+  requested zoom, x and y values
 * `%{quadkey}` is replaced with the [quadkey][] of the requested zoom, x and
   y values
 
