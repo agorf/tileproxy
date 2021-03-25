@@ -43,7 +43,7 @@ underscore characters.
 Service configurations must contain a `url`. The following `url` placeholders
 are supported:
 
-* `%{z}` is replaced with the requested zoom (or precision)
+* `%{z}` is replaced with the requested zoom (precision)
 * `%{x}` is replaced with the x value (column) of the requested tile
 * `%{y}` is replaced with the y value (row) of the requested tile
 * `%{bbox}` is replaced with the [Spherical Mercator][mercator] bounding box of
