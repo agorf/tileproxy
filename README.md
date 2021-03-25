@@ -47,10 +47,13 @@ placeholders:
 * `%{z}` is replaced with the requested zoom (precision)
 * `%{x}` is replaced with the x value (column) of the requested tile
 * `%{y}` is replaced with the y value (row) of the requested tile
-* `%{bbox}` is replaced with the [Web Mercator][mercator] bounding box of the
-  requested zoom, x and y values
 * `%{quadkey}` is replaced with the [quadkey][] of the requested zoom, x and
   y values
+* `%{bbox_web_mercator}` or `%{bbox_epsg3857}` is replaced with the
+  [Web Mercator][mercator] (EPSG:3857) bounding box of the requested zoom, x and
+  y values
+* `%{bbox_wgs84}` or `%{bbox_epsg4326}` is replaced with the [WGS 84][wgs84]
+  (EPSG:4326) bounding box of the requested zoom, x and y values
 
 Any other placeholder is replaced by key-value pairs that must be present in the
 mapping value of the service. For example:
