@@ -32,7 +32,8 @@ request path.
 ## Configuration
 
 This program is configured with a `services.yml` file that must be present in
-the same directory as `config.ru`
+the same directory as `config.ru` by default. It's possible to change the path
+to the configuration file with the `CONFIG_PATH` environment variable.
 
 `services.yml` is a [YAML][] file which maps service names to their
 configurations.
