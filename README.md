@@ -67,7 +67,10 @@ of values. For example:
 ~~~ yaml
 openstreetmap:
   url: 'https://%{server}.tile.openstreetmap.org/%{z}/%{x}/%{y}.png'
-  server: ['a', 'b', 'c']
+  server:
+    - a
+    - b
+    - c
 ~~~
 
 To start off, copy the sample services YAML file to `services.yml` and customize
