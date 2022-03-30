@@ -12,7 +12,7 @@ GEM
     pry (0.14.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    puma (5.6.2)
+    puma (5.6.4)
       nio4r (~> 2.0)
     rack (2.2.3)
     rake (13.0.3)
@@ -28,7 +28,7 @@ PLATFORMS
 DEPENDENCIES
   minitest (~> 5.14.4)
   pry (~> 0.14.0)
-  puma (~> 5.6.2)
+  puma (~> 5.6.4)
   rack (~> 2.2.3)
   rake (~> 13.0.3)
   rerun (~> 0.13.0)
