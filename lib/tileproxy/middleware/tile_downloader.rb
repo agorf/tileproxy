@@ -8,6 +8,8 @@ require_relative '../tile'
 module Tileproxy
   module Middleware
     class TileDownloader < BaseMiddleware
+      OPEN_TIMEOUT_SECONDS = 2
+
       def initialize(app, services:, tile_cache_path:)
         @app = app
         @services = services
@@ -25,7 +27,10 @@ module Tileproxy
         tile = Tile.new(x, y, z, extension: path.fetch(:ext))
 
         begin
-          remote_file = URI.open(service.tile_url(tile))
+          remote_file = URI.open(
+            service.tile_url(tile),
+            open_timeout: OPEN_TIMEOUT_SECONDS
+          )
         rescue OpenURI::HTTPError => e
           return http_error(
             :bad_gateway,
