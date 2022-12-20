@@ -31,6 +31,11 @@ module Tileproxy
             :bad_gateway,
             "#{service_name} service responded with #{e.message}"
           )
+        rescue Net::OpenTimeout
+          return http_error(
+            :bad_gateway,
+            "Request to #{service_name} timed out"
+          )
         end
 
         if remote_file.content_type.to_s.split('/', 2)[0] != 'image'
