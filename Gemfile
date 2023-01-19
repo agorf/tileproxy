@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'puma', '~> 5.6.4'
-gem 'rack', '~> 2.2.3'
+gem 'rack', '~> 2.2.6'
 
 group :development do
   gem 'minitest', '~> 5.14.4'
