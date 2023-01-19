@@ -14,7 +14,7 @@ GEM
       method_source (~> 1.0)
     puma (5.6.4)
       nio4r (~> 2.0)
-    rack (2.2.3.1)
+    rack (2.2.6.2)
     rake (13.0.3)
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
@@ -29,7 +29,7 @@ DEPENDENCIES
   minitest (~> 5.14.4)
   pry (~> 0.14.0)
   puma (~> 5.6.4)
-  rack (~> 2.2.3)
+  rack (~> 2.2.6)
   rake (~> 13.0.3)
   rerun (~> 0.13.0)
 
