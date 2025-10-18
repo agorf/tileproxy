@@ -11,7 +11,7 @@ class Minitest::Test
 
     def call(env)
       @env = env
-      [200, { 'Content-Type' => 'text/plain' }, ['OK']]
+      [200, { 'content-type' => 'text/plain' }, ['OK']]
     end
   end
 end

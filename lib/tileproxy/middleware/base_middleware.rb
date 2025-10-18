@@ -6,7 +6,7 @@ module Tileproxy
       def http_error(status, message)
         [
           Rack::Utils.status_code(status),
-          { 'Content-Type' => 'text/plain' },
+          { 'content-type' => 'text/plain' },
           [message]
         ]
       end
