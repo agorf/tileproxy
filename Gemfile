@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'puma', '~> 6.6.0'
-gem 'rack', '~> 3.1.16'
+gem 'rack', '~> 3.1.18'
 gem 'rackup', '~> 2.2.1'
 
 group :development do
