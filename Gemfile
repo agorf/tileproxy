@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'puma', '~> 5.6.8'
+gem 'puma', '~> 6.6.0'
 gem 'rack', '~> 3.1.16'
 
 group :development do
