@@ -15,6 +15,8 @@ GEM
     puma (6.6.0)
       nio4r (~> 2.0)
     rack (3.1.16)
+    rackup (2.2.1)
+      rack (>= 3)
     rake (13.3.0)
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
@@ -30,6 +32,7 @@ DEPENDENCIES
   pry (~> 0.14.0)
   puma (~> 6.6.0)
   rack (~> 3.1.16)
+  rackup (~> 2.2.1)
   rake (~> 13.3.0)
   rerun (~> 0.13.0)
 
